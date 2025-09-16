@@ -159,21 +159,24 @@ function MapWithControls() {
             lat: parseFloat(report.latitude),
             lng: parseFloat(report.longitude),
           }}
-          label={{
-            text: issueEmojis[report.issue] || "❗", // fallback emoji
-            color: "white",
-            fontSize: "20px",
-          }}
           icon={{
-            path: "M0 0 L0 20 L20 20 L20 0 Z", // simple square blob
-            fillColor: "#e53935", // red blob
+            path: window.google.maps.SymbolPath.CIRCLE, // circle
+            fillColor: "#797575ff",      // white fill
             fillOpacity: 1,
-            strokeWeight: 0,
-            scale: 1,
-          }}
+            strokeColor: "#e53935",    // red border
+            strokeWeight: 3,            // thickness of the border
+            scale: 20,                  // radius of the circle in pixels
+            }}
+          label={{
+            text: issueEmojis[report.issue] || "❗",
+            color: "white",
+            fontSize: "16px",
+            fontWeight: "bold",
+            }}
         />
       ))}
       </Map>
+
       {tempMarker && (
           <Marker
             position={tempMarker}
