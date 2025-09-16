@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback  } from 'react';
 import {createRoot} from "react-dom/client";
-import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker, InfoWindow } from '@vis.gl/react-google-maps';
-
+import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker } from '@vis.gl/react-google-maps';
+import Navigation from '../../pages/Navigation';
+import Footer from '../../pages/Footer';
 const issuesList = [
   { label: "🕳️ Pothole", value: "pothole" },
   { label: "🗑️ Garbage", value: "garbage" },
@@ -128,6 +129,7 @@ function MapWithControls() {
 
   return (
     <div>
+      <Navigation/>
         {reportMode && (
         <div
             style={{
@@ -230,8 +232,8 @@ function MapWithControls() {
         <button
           style={{
             position: "absolute",
-            top: "10px",
-            right: "60px",
+            top: "95px",
+            right: "40px",
             padding: "10px 16px",
             backgroundColor: "#d22519ff",
             color: "white",
@@ -241,6 +243,7 @@ function MapWithControls() {
             fontSize: "16px",
             fontWeight: "bold",
             boxShadow: "0px 2px 6px rgba(0,0,0,0.2)"
+
           }}
           onClick={() => setReportMode(true)}
         >Report an Issue</button>
@@ -250,8 +253,8 @@ function MapWithControls() {
           onClick={() => setShowForm(true)}
           style={{
             position: "absolute",
-            top: "60px",
-            right: "20px",
+            top: "95px",
+            right: "40px",
             padding: "10px 16px",
             background: "#388e3c",
             color: "white",
@@ -291,10 +294,10 @@ function MapWithControls() {
               gap: "16px",
             }}
           >
-            <h3>Report Issue</h3>
-            <div>
+            <h3 className='peer-focus:border-blue-500'>Report Issue</h3>
+            <div className='border-2'>
               <label>Selected Location:</label>
-              <div style={{ marginTop: "4px" }}>
+              <div  style={{ marginTop: "4px" }}>
                 {tempMarker.lat.toFixed(5)}, {tempMarker.lng.toFixed(5)}
               </div>
             </div>
@@ -306,7 +309,7 @@ function MapWithControls() {
                 onChange={(e) => setSelectedIssue(e.target.value)}
                 style={{ width: "100%", padding: "8px", marginTop: "4px" }}
               >
-                <option value="">-- Select Issue --</option>
+                <option value="" className='border-2'>-- Select Issue --</option>
                 {issuesList.map((issue) => (
                   <option key={issue.value} value={issue.value}>
                     {issue.label}
@@ -318,6 +321,7 @@ function MapWithControls() {
             <div>
               <label>Title:</label>
               <input
+                className='border-2  focus:outline-none focus:border-blue-500'
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -328,8 +332,9 @@ function MapWithControls() {
             </div>
 
             <div>
-              <label>Description:</label>
+              <label >Description:</label>
               <textarea
+              className='border-2'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter description (optional)"
@@ -410,6 +415,7 @@ const UserDashBoard = () => {
   const [zoom, setZoom] = useState(7);
 
   return (
+    <div>
   <APIProvider apiKey={'AIzaSyAp1DBQN_zl5xbHWxECa50MGR4IputFHgY'} onLoad={() => console.log('Maps API has loaded.')}>
    <div style={{width: "100vw", height: "100vh"}}>
    {/* <Map
@@ -421,9 +427,11 @@ const UserDashBoard = () => {
       }>
    </Map> */}
    <MapWithControls />
+   <Footer/>
    </div>
    
   </APIProvider>
+  </div>
 )
 };
 
