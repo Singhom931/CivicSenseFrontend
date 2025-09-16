@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback  } from 'react';
-import {createRoot} from "react-dom/client";
-import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker, InfoWindow } from '@vis.gl/react-google-maps';
+import {APIProvider, Map, useMap, Marker, InfoWindow } from '@vis.gl/react-google-maps';
 import Navigation from '../../pages/Navigation';
 import Footer from '../../pages/Footer';
 
@@ -27,8 +26,6 @@ const issueEmojis = {
 function MapWithControls() {
   const map = useMap();
   const [location, setLocation] = useState(null);      // {lat, lng}
-  const [accuracy, setAccuracy] = useState(0);         // optional
-
   const [reportMode, setReportMode] = useState(false);
   const [tempMarker, setTempMarker] = useState(null); // {lat, lng} when user clicks
   const [showForm, setShowForm] = useState(false);
@@ -412,9 +409,6 @@ function MapWithControls() {
   );
 }
 const UserDashBoard = () => {
-  const [center, setCenter] = useState({ lat: 23.6913, lng: 85.2722 });
-  const [zoom, setZoom] = useState(7);
-
   return (
     <div>
   <APIProvider apiKey={'AIzaSyAp1DBQN_zl5xbHWxECa50MGR4IputFHgY'} onLoad={() => console.log('Maps API has loaded.')}>
