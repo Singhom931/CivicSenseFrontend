@@ -44,7 +44,7 @@ function MapWithControls() {
 
   // Fetch reports from backend on load
   useEffect(() => {
-    fetch("http://localhost:8000/reports")  // your FastAPI backend
+    fetch("https://civic-issue-backend.onrender.com/reports")  // your FastAPI backend
       .then((res) => res.json())
       .then((data) => setReports(data))
       .catch((err) => console.error("Error fetching reports:", err));
@@ -72,7 +72,7 @@ function MapWithControls() {
     reportData.append("image", imageFile); // file
 
     try {
-    const response = await fetch("http://localhost:8000/reports", {
+    const response = await fetch("http://civic-issue-backend.onrender.com/reports", {
       method: "POST",
       body: reportData,
     });
@@ -195,7 +195,7 @@ function MapWithControls() {
             <p>Issue: {selectedReport.issue}</p>
             {selectedReport.image_path && (
               <img
-                src={`http://localhost:8000/${selectedReport.image_path}`}
+                src={`http://civic-issue-backend.onrender.com/${selectedReport.image_path}`}
                 alt="report"
                 style={{ width: "100%", borderRadius: "4px" }}
               />
