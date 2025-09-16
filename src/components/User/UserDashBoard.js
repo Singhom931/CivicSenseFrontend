@@ -26,6 +26,8 @@ const issueEmojis = {
 function MapWithControls() {
   const map = useMap();
   const [location, setLocation] = useState(null);      // {lat, lng}
+  const [accuracy, setAccuracy] = useState(0);         // optional
+  
   const [reportMode, setReportMode] = useState(false);
   const [tempMarker, setTempMarker] = useState(null); // {lat, lng} when user clicks
   const [showForm, setShowForm] = useState(false);
