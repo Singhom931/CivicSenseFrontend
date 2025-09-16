@@ -30,7 +30,7 @@ function Footer(){
     </div>
   </div>
 
-  <div class="mt-8 border-t border-blue-300 pt-4 text-center text-sm text-blue-100">
+  <div class="mt-8 border-t border-blue-300 pt-4 text-center text-sm text-black">
     © 2025 CivicSense. All rights reserved.
   </div>
     </div>
