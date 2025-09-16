@@ -1,7 +1,6 @@
 import './App.css';
 import Footer from './pages/Footer';
 import { Link } from 'react-router-dom';
-import Support from './pages/Support';
 function App() {
   return (
     <div>
