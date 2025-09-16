@@ -2,6 +2,26 @@ import React, { useEffect, useState, useCallback  } from 'react';
 import {createRoot} from "react-dom/client";
 import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker } from '@vis.gl/react-google-maps';
 
+const issuesList = [
+  { label: "🕳️ Pothole", value: "pothole" },
+  { label: "🗑️ Garbage", value: "garbage" },
+  { label: "🛣️ Broken Road", value: "broken_road" },
+  { label: "🌳 Overgrown Tree", value: "overgrown_tree" },
+  { label: "💡 Faulty Street Light", value: "street_light" },
+  { label: "💧 Drainage Issue", value: "drainage" },
+  { label: "🚽 Sewage Issue", value: "sewage" },
+];
+
+const issueEmojis = {
+  pothole: "🕳️",
+  garbage: "🗑️",
+  broken_road: "🛣️",
+  overgrown_tree: "🌳",
+  street_light: "💡",
+  drainage: "💧",
+  sewage: "🚽",
+};
+
 function MapWithControls() {
   const map = useMap();
   const [location, setLocation] = useState(null);      // {lat, lng}
@@ -11,10 +31,68 @@ function MapWithControls() {
   const [tempMarker, setTempMarker] = useState(null); // {lat, lng} when user clicks
   const [showForm, setShowForm] = useState(false);
 
+  const [selectedIssue, setSelectedIssue] = useState(""); // form state
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
+  const [reports, setReports] = useState([]);
+
+  // Fetch reports from backend on load
+  useEffect(() => {
+    fetch("http://localhost:8000/reports")  // your FastAPI backend
+      .then((res) => res.json())
+      .then((data) => setReports(data))
+      .catch((err) => console.error("Error fetching reports:", err));
+  }, []);
+
   const handleMapClick = (event) => {
     if (!reportMode) return;
     const { lat, lng } = event.detail.latLng;
     setTempMarker({ lat, lng });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!tempMarker || !selectedIssue || !title || !imageFile) {
+      alert("Please fill all required fields: Location, Issue, Title, and Image.");
+      return;
+    }
+  
+    const reportData = new FormData();
+    reportData.append("latitude", tempMarker.lat);
+    reportData.append("longitude", tempMarker.lng);
+    reportData.append("issue", selectedIssue);
+    reportData.append("title", title);
+    reportData.append("description", description);
+    reportData.append("image", imageFile); // file
+
+    try {
+    const response = await fetch("http://localhost:8000/reports", {
+      method: "POST",
+      body: reportData,
+    });
+
+    if (!response.ok) throw new Error("Failed to submit report");
+
+    const data = await response.json();
+    console.log("Server response:", data);
+
+    alert("Report submitted successfully!");
+
+    // Reset form
+    setShowForm(false);
+    setReportMode(false);
+    setTempMarker(null);
+    setSelectedIssue("");
+    setTitle("");
+    setDescription("");
+    setImageFile(null);
+
+  } catch (error) {
+    console.error("Error submitting report:", error);
+    alert("Error submitting report. Please try again.");
+  }
   };
 
   const mapStyle = [
@@ -68,12 +146,34 @@ function MapWithControls() {
         style={{ width: '100vw', height: '100vh' }}
         defaultCenter={{ lat: 23.6913, lng: 85.2722 }}
         defaultZoom={6}
+        
         onClick={handleMapClick}
         options={{
             styles: mapStyle,    // 👈 hides POI icons
             disableDefaultUI: false, // keep zoom controls etc
-        }}
-      />
+        }}>
+        {reports.map((report) => (
+        <Marker
+          key={report.id}
+          position={{
+            lat: parseFloat(report.latitude),
+            lng: parseFloat(report.longitude),
+          }}
+          label={{
+            text: issueEmojis[report.issue] || "❗", // fallback emoji
+            color: "white",
+            fontSize: "20px",
+          }}
+          icon={{
+            path: "M0 0 L0 20 L20 20 L20 0 Z", // simple square blob
+            fillColor: "#e53935", // red blob
+            fillOpacity: 1,
+            strokeWeight: 0,
+            scale: 1,
+          }}
+        />
+      ))}
+      </Map>
       {tempMarker && (
           <Marker
             position={tempMarker}
@@ -150,17 +250,109 @@ function MapWithControls() {
             zIndex: 20,
           }}
         >
-          <div
+          <form
+            onSubmit={handleSubmit}
             style={{
               width: "400px",
-              height: "300px",
               background: "white",
               borderRadius: "8px",
               padding: "20px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
             }}
           >
-            {/* Form content will go here */}
-          </div>
+            <h3>Report Issue</h3>
+            <div>
+              <label>Selected Location:</label>
+              <div style={{ marginTop: "4px" }}>
+                {tempMarker.lat.toFixed(5)}, {tempMarker.lng.toFixed(5)}
+              </div>
+            </div>
+
+            <div>
+              <label>Issue:</label>
+              <select
+                value={selectedIssue}
+                onChange={(e) => setSelectedIssue(e.target.value)}
+                style={{ width: "100%", padding: "8px", marginTop: "4px" }}
+              >
+                <option value="">-- Select Issue --</option>
+                {issuesList.map((issue) => (
+                  <option key={issue.value} value={issue.value}>
+                    {issue.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label>Title:</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter a short title"
+                style={{ width: "100%", padding: "8px", marginTop: "4px" }}
+                required
+              />
+            </div>
+
+            <div>
+              <label>Description:</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter description (optional)"
+                style={{ width: "100%", padding: "8px", marginTop: "4px" }}
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <label>Upload Image:</label>
+              <div style={{ marginTop: "4px", position: "relative" }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  required
+                  style={{
+                    opacity: 0,
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    cursor: "pointer",
+                  }}
+                />
+                <div
+                  style={{
+                    border: "2px dashed #888",
+                    borderRadius: "6px",
+                    padding: "12px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  {imageFile ? imageFile.name : "Click or drag image here"}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                padding: "10px",
+                background: "#4285F4",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Submit
+            </button>
+          </form>
         </div>
       )}
       <button
