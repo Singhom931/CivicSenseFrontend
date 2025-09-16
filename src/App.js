@@ -14,10 +14,10 @@ function App() {
           Support Us
         </Link>
       </div> 
-      <div className='min-h-screen bg-gradient-to-br from-white to-softmint '>
+      <div className='mb-10 min-h-screen bg-gradient-to-br from-white to-softmint '>
 
 
-        <div className=' pt-44'>
+        <div className=' pt-44 '>
           <h1 className='text-bg-gradient-to-r from-blue-500 to-green-200 flex justify-center items-center text-4xl text-black font-bold'>
             Are you a??
           </h1>
