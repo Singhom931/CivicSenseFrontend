@@ -6,7 +6,7 @@ function  AdminSignup () {
   return (
     <div>
         <Navigation/>
-        <h1> Admin SignUp</h1>
+        <h1>Admin SignUp</h1>
         <Footer/>
     </div>
   )

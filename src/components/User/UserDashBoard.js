@@ -427,11 +427,16 @@ const UserDashBoard = () => {
         console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
       }>
    </Map> */}
+   
    <MapWithControls />
+   <div className='mt-5'>
+
+   </div>
    <Footer/>
    </div>
    
   </APIProvider>
+  
   </div>
 )
 };
