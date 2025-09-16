@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback  } from 'react';
 import {createRoot} from "react-dom/client";
-import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker } from '@vis.gl/react-google-maps';
+import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker, InfoWindow } from '@vis.gl/react-google-maps';
 import Navigation from '../../pages/Navigation';
 import Footer from '../../pages/Footer';
 
@@ -39,6 +39,9 @@ function MapWithControls() {
   const [imageFile, setImageFile] = useState(null);
 
   const [reports, setReports] = useState([]);
+
+  const [selectedReport, setSelectedReport] = useState(null); // for InfoWindow
+
 
   // Fetch reports from backend on load
   useEffect(() => {
@@ -164,7 +167,7 @@ function MapWithControls() {
           }}
           icon={{
             path: window.google.maps.SymbolPath.CIRCLE, // circle
-            fillColor: "#797575ff",      // white fill
+            fillColor: "#b9b1b1ff",      // white fill
             fillOpacity: 1,
             strokeColor: "#e53935",    // red border
             strokeWeight: 3,            // thickness of the border
@@ -176,8 +179,31 @@ function MapWithControls() {
             fontSize: "16px",
             fontWeight: "bold",
             }}
+          onClick={() => setSelectedReport(report)}
         />
-      ))}
+        ))}
+        {selectedReport && (
+        <InfoWindow
+          position={{
+            lat: parseFloat(selectedReport.latitude),
+            lng: parseFloat(selectedReport.longitude),
+          }}
+          onCloseClick={() => setSelectedReport(null)}
+        >
+          <div style={{ maxWidth: "200px" }}>
+            <h3>{selectedReport.title}</h3>
+            <p>{selectedReport.description}</p>
+            <p>Issue: {selectedReport.issue}</p>
+            {selectedReport.image_path && (
+              <img
+                src={`http://localhost:8000/${selectedReport.image_path}`}
+                alt="report"
+                style={{ width: "100%", borderRadius: "4px" }}
+              />
+            )}
+          </div>
+        </InfoWindow>
+      )}
       </Map>
 
       {tempMarker && (
