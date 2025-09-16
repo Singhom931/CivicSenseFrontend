@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback  } from 'react';
 import {createRoot} from "react-dom/client";
-import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker } from '@vis.gl/react-google-maps';
+import {APIProvider, Map, MapCameraChangedEvent, useMap, Marker, InfoWindow } from '@vis.gl/react-google-maps';
 import Navigation from '../../pages/Navigation';
 import Footer from '../../pages/Footer';
+
 const issuesList = [
   { label: "🕳️ Pothole", value: "pothole" },
   { label: "🗑️ Garbage", value: "garbage" },
