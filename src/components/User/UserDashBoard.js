@@ -72,7 +72,7 @@ function MapWithControls() {
     reportData.append("image", imageFile); // file
 
     try {
-    const response = await fetch("http://civic-issue-backend.onrender.com/reports", {
+    const response = await fetch("https://civic-issue-backend.onrender.com/reports", {
       method: "POST",
       body: reportData,
     });
@@ -195,7 +195,7 @@ function MapWithControls() {
             <p>Issue: {selectedReport.issue}</p>
             {selectedReport.image_path && (
               <img
-                src={`http://civic-issue-backend.onrender.com/${selectedReport.image_path}`}
+                src={`https://civic-issue-backend.onrender.com/${selectedReport.image_path}`}
                 alt="report"
                 style={{ width: "100%", borderRadius: "4px" }}
               />
