@@ -16,7 +16,7 @@ function Support() {
             
           </h3>
           <div className='flex justify-center items-center gap-20 pt-5'>
-            <Link to="/admin/login"  className='bg-gradient-to-r from-blue-500 to-green-200  pt-2 pb-2 pl-4 pr-4 text-2xl font-bold border-green-200-2 rounded-lg shadow-2xl hover:bg-green-200 text-white translate-x-2'>Admin</Link>
+            <Link to="/admin/dashboard"  className='bg-gradient-to-r from-blue-500 to-green-200  pt-2 pb-2 pl-4 pr-4 text-2xl font-bold border-green-200-2 rounded-lg shadow-2xl hover:bg-green-200 text-white translate-x-2'>Admin</Link>
             <Link to="/user/dashboard" className='bg-gradient-to-r from-blue-500 to-green-200  pt-2 pb-2 pl-4 pr-4 text-2xl font-bold border-green-200-2 rounded-lg shadow-2xl hover:bg-green-200 text-white translate-x-2'>User</Link>
           </div>
           </div >
